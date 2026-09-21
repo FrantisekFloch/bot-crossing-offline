@@ -106,6 +106,17 @@ export class CameraRig {
     window.addEventListener('pointercancel', this._onUp)
     dom.addEventListener('wheel', this._onWheel, { passive: false })
     dom.addEventListener('contextmenu', this._onMenu)
+
+    // iOS Safari treats a two-finger pinch as a page-zoom gesture and never delivers the
+    // second pointer to us, so pinch-to-zoom silently dies. Swallowing the legacy touch and
+    // gesture events on the canvas keeps the gesture in the app. (Harmless elsewhere.)
+    this._onTouchMove = (e) => {
+      if (e.touches && e.touches.length > 1) e.preventDefault()
+    }
+    this._onGesture = (e) => e.preventDefault()
+    dom.addEventListener('touchmove', this._onTouchMove, { passive: false })
+    dom.addEventListener('gesturestart', this._onGesture)
+    dom.addEventListener('gesturechange', this._onGesture)
   }
 
   dispose() {
@@ -116,6 +127,9 @@ export class CameraRig {
     window.removeEventListener('pointercancel', this._onUp)
     dom.removeEventListener('wheel', this._onWheel)
     dom.removeEventListener('contextmenu', this._onMenu)
+    dom.removeEventListener('touchmove', this._onTouchMove)
+    dom.removeEventListener('gesturestart', this._onGesture)
+    dom.removeEventListener('gesturechange', this._onGesture)
   }
 
   // ── input ───────────────────────────────────────────────────────────────────────────
@@ -286,6 +300,18 @@ export class CameraRig {
     this.desiredAzimuth = this._nearestIso()
     this._zoom = null
     this.idleFor = 99
+  }
+
+  /**
+   * Step the zoom by a factor (>1 zooms out, <1 zooms in), eased via desiredDistance.
+   * Used by the on-screen +/- buttons so zoom works on touch devices where a two-finger
+   * pinch may be swallowed by the mobile browser. `factor` centres on the current target.
+   */
+  zoomBy(factor) {
+    if (!this.enabled) return
+    this.desiredDistance = THREE.MathUtils.clamp(this.desiredDistance * factor, MIN_DIST, MAX_DIST)
+    this._zoom = null // no cursor anchor — keep it centred on the target
+    this.idleFor = 0
   }
 
   /**

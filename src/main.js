@@ -69,6 +69,11 @@ const hoverGround = new THREE.Vector3()
 const actions = {
   resetView: () => rig.resetView(),
 
+  // On-screen zoom (mainly for touch devices, where a two-finger pinch can be swallowed by
+  // the mobile browser). Same easing path as the +/- keys and the wheel.
+  zoomIn: () => rig.zoomBy(0.82),
+  zoomOut: () => rig.zoomBy(1.22),
+
   screenshot: () => {
     // Render one more frame, then read the buffer before the compositor clears it — the
     // alternative is preserveDrawingBuffer, which costs a copy on every single frame.

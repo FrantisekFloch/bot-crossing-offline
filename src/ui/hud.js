@@ -45,6 +45,8 @@ const ICON = {
   copy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>`,
   locate: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7.6"/><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6"/></svg>`,
   orbit: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10.2" ry="4.6" transform="rotate(-24 12 12)"/><circle cx="21" cy="8.2" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+  zoomIn: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg>`,
+  zoomOut: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 12h12"/></svg>`,
 }
 
 const STAT_DEFS = [
@@ -352,6 +354,8 @@ export class Hud {
 
     on('#btn-settings', 'click', () => this.toggleSettings())
     on('#btn-close-settings', 'click', () => this.toggleSettings(false))
+    on('#btn-zoom-in', 'click', () => this.actions.zoomIn?.())
+    on('#btn-zoom-out', 'click', () => this.actions.zoomOut?.())
     // Screenshot / Help / Hide-UI (right sidebar) and the left nav rail (home / next /
     // orbit / planet / time) were removed from the main screen. Their keyboard shortcuts
     // (P, ?, H, 0, N, O, Tab, L) are wired in main.js and still work.
@@ -1015,10 +1019,15 @@ const TEMPLATE = `
 <div class="fps panel"></div>
 <div class="hint-pill panel"></div>
 
+<div class="zoom-controls">
+  <button class="btn icon zoom-btn" id="btn-zoom-in" title="Zoom in (+)" aria-label="Zoom in">${ICON.zoomIn}</button>
+  <button class="btn icon zoom-btn" id="btn-zoom-out" title="Zoom out (−)" aria-label="Zoom out">${ICON.zoomOut}</button>
+</div>
+
 <div class="help">
   <div class="sheet panel">
     <h2>Bot Crossing — offline demo</h2>
-    <p class="sub">A live, offline demo of František's agent colony. Every astronaut is one of his coding-agent sessions — walking out of the ship, claiming a plot for its repo, and building. This is a showcase, so the bots are fabricated and access is locked: click one and hit <b>Open</b> and it will tell you as much. Everything else is the real thing — click a zone (its deck or its name) for the repo, park or hide repos, and fly around like Google Earth: drag the ground, right-drag to tilt, scroll to zoom in on whatever is under the cursor. Built on the open-source Bot Crossing by Jarren Rocks.</p>
+    <p class="sub">A live, offline demo of František's agent colony. Every astronaut is one of his coding-agent sessions — walking out of the ship, claiming a plot for its repo, and building. This is a showcase, so the bots are fabricated and access is locked: click one and hit <b>Open</b> and it will tell you as much. Everything else is the real thing — click a zone (its deck or its name) for the repo, park or hide repos, and fly around like Google Earth: drag the ground, right-drag to tilt, scroll or pinch to zoom (or use the <b>+ / −</b> buttons on a phone). Built on the open-source Bot Crossing by Jarren Rocks.</p>
     <div class="cols">
       <div>
         <div class="k"><span>Drag the ground</span><kbd>drag</kbd></div>
