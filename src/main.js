@@ -558,6 +558,10 @@ window.addEventListener('keydown', (e) => {
     case 'O':
       hud.setOrbit(actions.toggleOrbit())
       break
+    case 'b':
+    case 'B':
+      hud.collapseSide()
+      break
     case 'Tab':
       e.preventDefault()
       actions.cyclePlanet()

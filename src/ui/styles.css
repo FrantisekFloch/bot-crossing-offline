@@ -1515,3 +1515,44 @@ kbd {
     height: 52px;
   }
 }
+
+/* ── collapsible right sidebar ─────────────────────────────────────────────────────── */
+.side {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
+}
+
+/* Hidden: slide off the right edge and stop catching clicks so the colony is clear. */
+.side.collapsed {
+  transform: translateX(calc(100% + 24px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Floating "Panel" button — only visible while the sidebar is collapsed. */
+.show-side {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 21;
+  display: none;
+  gap: 7px;
+  height: 38px;
+  padding: 0 14px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text);
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.show-side.on {
+  display: inline-flex;
+}
+
+.show-side svg {
+  width: 17px;
+  height: 17px;
+}

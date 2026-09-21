@@ -47,6 +47,8 @@ const ICON = {
   orbit: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="10.2" ry="4.6" transform="rotate(-24 12 12)"/><circle cx="21" cy="8.2" r="1.5" fill="currentColor" stroke="none"/></svg>`,
   zoomIn: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 12h12M12 6v12"/></svg>`,
   zoomOut: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 12h12"/></svg>`,
+  collapse: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6l6 6-6 6M5 6l6 6-6 6"/></svg>`,
+  panel: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M14 4v16"/></svg>`,
 }
 
 const STAT_DEFS = [
@@ -356,6 +358,8 @@ export class Hud {
     on('#btn-close-settings', 'click', () => this.toggleSettings(false))
     on('#btn-zoom-in', 'click', () => this.actions.zoomIn?.())
     on('#btn-zoom-out', 'click', () => this.actions.zoomOut?.())
+    on('#btn-collapse-side', 'click', () => this.collapseSide(true))
+    on('#btn-show-side', 'click', () => this.collapseSide(false))
     // Screenshot / Help / Hide-UI (right sidebar) and the left nav rail (home / next /
     // orbit / planet / time) were removed from the main screen. Their keyboard shortcuts
     // (P, ?, H, 0, N, O, Tab, L) are wired in main.js and still work.
@@ -810,6 +814,21 @@ export class Hud {
   }
 
   /**
+   * Collapse just the right-hand repos panel so the colony is unobstructed. A small "Panel"
+   * button appears while it is hidden to bring it back. Distinct from `toggleUi` (H), which
+   * hides the whole HUD. `collapsed = true` means the panel is hidden.
+   */
+  collapseSide(force) {
+    const side = this.$('.side')
+    const collapsed = force ?? !side.classList.contains('collapsed')
+    side.classList.toggle('collapsed', collapsed)
+    // The floating "show" button is only useful while the panel is hidden.
+    const show = this.$('#btn-show-side')
+    if (show) show.classList.toggle('on', collapsed)
+    return collapsed
+  }
+
+  /**
    * Dismiss everything. This is the mode the game is really meant to be left in — the
    * colony carries its own state above the astronauts' heads, so the panels are for
    * setting things up, not for playing.
@@ -949,6 +968,7 @@ const TEMPLATE = `
   <header class="brandbar">
     <div class="brand"><i class="dot"></i>Bot Crossing</div>
     <button class="btn icon ghost" id="btn-settings" title="Settings (S)" aria-pressed="false">${ICON.settings}</button>
+    <button class="btn icon ghost" id="btn-collapse-side" title="Hide this panel (B)" aria-label="Hide panel">${ICON.collapse}</button>
   </header>
 
   <div class="stats"></div>
@@ -1023,6 +1043,8 @@ const TEMPLATE = `
   <button class="btn icon zoom-btn" id="btn-zoom-in" title="Zoom in (+)" aria-label="Zoom in">${ICON.zoomIn}</button>
   <button class="btn icon zoom-btn" id="btn-zoom-out" title="Zoom out (−)" aria-label="Zoom out">${ICON.zoomOut}</button>
 </div>
+
+<button class="btn show-side" id="btn-show-side" title="Show the panel (B)" aria-label="Show panel">${ICON.panel} Panel</button>
 
 <div class="help">
   <div class="sheet panel">
