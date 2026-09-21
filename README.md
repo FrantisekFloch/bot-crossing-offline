@@ -60,3 +60,42 @@ Bot Crossing, running unchanged and fully client-side.
 
 MIT. The original Bot Crossing copyright is retained in [`LICENSE`](./LICENSE) alongside the
 fork's. Credit to Jarren Rocks for the original project.
+
+## Project status — PARKED
+
+Feature-complete and pushed to GitHub. **One manual step remains to make the live demo public:**
+
+1. **Enable GitHub Pages** — repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+   (Until this is set, the deploy workflow's build succeeds but the final "Deploy to GitHub Pages"
+   step fails, and the live URL 404s.)
+2. Then **Actions** tab → re-run the latest **"Deploy demo to GitHub Pages"** run (or push any commit).
+3. The site goes live at **https://FrantisekFloch.github.io/bot-crossing-offline/** (first publish
+   can take 1–2 minutes to propagate).
+
+### What's done
+
+- Offline fork rendering **16 fabricated bots** across 4 tools (Kiro, Claude Code, Cursor, Codex):
+  4 need attention (1 red **!**, 3 blue **?**), 2 working, 1 shipped ✓, 9 idle (7 are static filler
+  to fill the screen). Data lives in `src/game/offline-data.js`.
+- Clicking **Open** on any bot shows the "access locked / not František" modal
+  (`hud.lockedMessage()`, wired from `actions.openThread` in `src/main.js`).
+- **Mobile:** on-screen **+ / −** zoom buttons (`.zoom-controls`) + iOS pinch hardening in
+  `src/core/camera.js` (`zoomBy`, `touchmove`/`gesturestart` preventDefault).
+- **Sidebar collapse:** `»` button in the panel header + floating **"Panel"** button + **B** key
+  (`hud.collapseSide()`), so the repos panel can be hidden to see the colony.
+- Attribution: original MIT `LICENSE` retained + fork copyright, `NOTICE.md`, updated `package.json`.
+- GitHub Actions Pages workflow (`.github/workflows/deploy.yml`) builds with
+  `BASE_PATH=/bot-crossing-offline/`.
+
+### Local dev note
+
+`node_modules` in the working copy is a **directory junction** to `../bot-crossing/node_modules`
+(saved space on the dev machine). If the folder is moved or the original is deleted, just run
+`npm install`.
+
+### Ideas if resumed
+
+- Default the sidebar to collapsed on small screens (phones) for an unobstructed first view.
+- Real vendor logos on zone labels instead of colored-initial badges.
+- A `localStorage` fallback for colony layout persistence on the static Pages build (currently
+  `/api/state` is absent there and layout simply isn't saved — the colony still renders fine).
